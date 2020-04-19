@@ -9,7 +9,7 @@ let readLines (filePath: string) =
     }
 
 let multi_line_input day =
-    readLines (sprintf "../../../inputs/%02i.txt" day)
+    readLines <| sprintf "../../../inputs/%02i.txt" day
 
 let single_line_input day =
     Seq.head (multi_line_input day)
@@ -72,6 +72,20 @@ module Day2 =
 
         Seq.map ribbon task |> Seq.sum
 
+module Day3 =
+    let part1 =
+        let task = single_line_input 3
+        let mutable visited = Set.empty
+        let mutable x = 0
+        let mutable y = 0
+        for c in task do
+            visited <- visited.Add (x, y)
+            match c with
+            | '<' -> x <- x - 1
+            | '>' -> x <- x + 1
+            | '^' -> y <- y - 1
+            | 'v' -> y <- y + 1
+        visited.Count
 
 [<EntryPoint>]
 let main argv =
@@ -79,4 +93,6 @@ let main argv =
     printfn "Day 1 part 2 answer: %i" Day1.part2
     printfn "Day 2 part 1 answer: %i" Day2.part1
     printfn "Day 2 part 2 answer: %i" Day2.part2
+    printfn "Day 3 part 1 answer: %i" Day3.part1
+//    printfn "Day 3 part 2 answer: %i" Day3.part2
     0

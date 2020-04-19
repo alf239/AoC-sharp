@@ -9,6 +9,7 @@
         <Compile Include="Program.fs" />
         <Content Include="inputs\01.txt" />
         <Content Include="inputs\02.txt" />
+        <Content Include="inputs\03.txt" />
     </ItemGroup>
 
 </Project>
