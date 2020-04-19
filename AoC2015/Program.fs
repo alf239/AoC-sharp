@@ -8,6 +8,12 @@ let readLines (filePath: string) =
             yield sr.ReadLine()
     }
 
+// https://stackoverflow.com/a/946386/562388
+let swap (left : 'a byref) (right : 'a byref) =
+  let temp = left
+  left <- right
+  right <- temp
+
 let multi_line_input day =
     readLines <| sprintf "../../../inputs/%02i.txt" day
 
@@ -73,18 +79,36 @@ module Day2 =
         Seq.map ribbon task |> Seq.sum
 
 module Day3 =
+    type Santa = {
+        x: int
+        y: int
+    }
+    let move santa c =
+        match c with
+        | '<' -> { santa with x = santa.x - 1 }
+        | '>' -> { santa with x = santa.x + 1}
+        | '^' -> { santa with y = santa.y - 1}
+        | 'v' -> { santa with y = santa.y + 1 }
+
     let part1 =
         let task = single_line_input 3
         let mutable visited = Set.empty
-        let mutable x = 0
-        let mutable y = 0
+        let mutable santa = { x = 0; y = 0 }
         for c in task do
-            visited <- visited.Add (x, y)
-            match c with
-            | '<' -> x <- x - 1
-            | '>' -> x <- x + 1
-            | '^' -> y <- y - 1
-            | 'v' -> y <- y + 1
+            visited <- visited.Add santa
+            santa <- move santa c
+        visited.Count
+
+    let part2 =
+        let task = single_line_input 3
+        let mutable visited = Set.empty
+        let mutable santa1 = { x = 0; y = 0 }
+        let mutable santa2 = { x = 0; y = 0 }
+        for c in task do
+            visited <- visited.Add santa1
+            visited <- visited.Add santa2
+            santa1 <- move santa1 c
+            swap &santa1 &santa2
         visited.Count
 
 [<EntryPoint>]
@@ -94,5 +118,5 @@ let main argv =
     printfn "Day 2 part 1 answer: %i" Day2.part1
     printfn "Day 2 part 2 answer: %i" Day2.part2
     printfn "Day 3 part 1 answer: %i" Day3.part1
-//    printfn "Day 3 part 2 answer: %i" Day3.part2
+    printfn "Day 3 part 2 answer: %i" Day3.part2
     0
