@@ -1,4 +1,6 @@
 ﻿open System.IO
+open System.Security.Cryptography
+open System.Text
 
 // https://stackoverflow.com/questions/2365527/how-read-a-file-into-a-seq-of-lines-in-f/2365548#2365548
 let readLines (filePath: string) =
@@ -115,6 +117,23 @@ module Day3 =
             s2 <- move t c
         Set.count visited
 
+module Day4 =
+    let part1 s =
+        use md5hash = MD5.Create()
+        seq { 1 .. 10000000 }
+        |> Seq.find (fun (i: int) ->
+            let hash = md5hash.ComputeHash(Encoding.UTF8.GetBytes(s + (string i)))
+            hash.[0] = (byte 0) && hash.[1] = (byte 0) && hash.[2] < (byte 0x10))
+
+    let part2 s =
+        use md5hash = MD5.Create()
+        seq { 1 .. 10000000 }
+        |> Seq.find (fun (i: int) ->
+            let hash = md5hash.ComputeHash(Encoding.UTF8.GetBytes(s + (string i)))
+            hash.[0] = (byte 0) && hash.[1] = (byte 0) && hash.[2] = (byte 0))
+
+
+
 [<EntryPoint>]
 let main argv =
     printfn "Day 1 part 1 answer: %i" Day1.part1
@@ -123,4 +142,6 @@ let main argv =
     printfn "Day 2 part 2 answer: %i" Day2.part2
     printfn "Day 3 part 1 answer: %i" Day3.part1
     printfn "Day 3 part 2 answer: %i" Day3.part2
+    printfn "Day 4 part 1 answer: %i" <| Day4.part1 "ckczppom"
+    printfn "Day 4 part 2 answer: %i" <| Day4.part2 "ckczppom"
     0
