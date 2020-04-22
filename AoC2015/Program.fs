@@ -118,19 +118,19 @@ module Day3 =
         Set.count visited
 
 module Day4 =
-    let part1 s =
+    let solve s f =
         use md5hash = MD5.Create()
         seq { 1 .. 10000000 }
         |> Seq.find (fun (i: int) ->
             let hash = md5hash.ComputeHash(Encoding.UTF8.GetBytes(s + (string i)))
-            hash.[0] = (byte 0) && hash.[1] = (byte 0) && hash.[2] < (byte 0x10))
+            f hash)
+        
+    
+    let part1 s =
+        solve s (fun hash -> hash.[0] = (byte 0) && hash.[1] = (byte 0) && hash.[2] < (byte 0x10))
 
     let part2 s =
-        use md5hash = MD5.Create()
-        seq { 1 .. 10000000 }
-        |> Seq.find (fun (i: int) ->
-            let hash = md5hash.ComputeHash(Encoding.UTF8.GetBytes(s + (string i)))
-            hash.[0] = (byte 0) && hash.[1] = (byte 0) && hash.[2] = (byte 0))
+        solve s (fun hash -> hash.[0] = (byte 0) && hash.[1] = (byte 0) && hash.[2] = (byte 0))
 
 
 
