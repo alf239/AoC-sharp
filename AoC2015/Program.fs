@@ -158,14 +158,45 @@ module Day5 =
         vowels_nr s >= 3 && ps |> Seq.exists (fun p -> p.[0] = p.[1])
         && ps |> Seq.forall (fun p -> not <| verboten.Contains p)
 
+    let has_adjacent_pair (xs: 't seq) =
+        let mutable preprev: 't option = Option.None
+        let mutable prev: 't option = Option.None
+
+        let pairs =
+            seq {
+                for x in xs do
+                    if preprev.IsSome then yield (preprev.Value, x) else ()
+                    preprev <- prev
+                    prev <- Option.Some(x)
+            }
+        Seq.exists (fun (a, b) -> a = b) pairs
+
+    let has_spaced_pair (xs: 't seq) =
+        let mutable seen: 't Set = Set.empty
+        let mutable prev: 't option = Option.None
+
+        let pairs =
+            seq {
+                for x in xs do
+                    yield (x, seen.Contains(x))
+                    if prev.IsSome then seen <- seen.Add(prev.Value) else ()
+                    prev <- Option.Some(x)
+            }
+        Seq.exists snd pairs
+
+    let is_nice2 s =
+        let ps = pairs s
+        has_spaced_pair ps && has_adjacent_pair s
 
     let part1 =
         multi_line_input 5
         |> Seq.filter is_nice
         |> Seq.length
 
-//    let part2 =
-//        raise <| NotImplementedException "todo"
+    let part2 =
+        multi_line_input 5
+        |> Seq.filter is_nice2
+        |> Seq.length
 
 
 
@@ -180,5 +211,5 @@ let main argv =
     printfn "Day 4 part 1 answer: %i" <| Day4.part1 "ckczppom"
     printfn "Day 4 part 2 answer: %i" <| Day4.part2 "ckczppom"
     printfn "Day 5 part 1 answer: %i" Day5.part1
-    //    printfn "Day 5 part 2 answer: %i" Day5.part2
+    printfn "Day 5 part 2 answer: %i" Day5.part2
     0
