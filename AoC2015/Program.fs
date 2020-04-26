@@ -1,4 +1,5 @@
-﻿open System.IO
+﻿open System
+open System.IO
 open System.Security.Cryptography
 open System.Text
 
@@ -124,13 +125,47 @@ module Day4 =
         |> Seq.find (fun (i: int) ->
             let hash = md5hash.ComputeHash(Encoding.UTF8.GetBytes(s + (string i)))
             f hash)
-        
-    
+
     let part1 s =
         solve s (fun hash -> hash.[0] = (byte 0) && hash.[1] = (byte 0) && hash.[2] < (byte 0x10))
 
     let part2 s =
         solve s (fun hash -> hash.[0] = (byte 0) && hash.[1] = (byte 0) && hash.[2] = (byte 0))
+
+module Day5 =
+    let vowels = Set.ofSeq ("aeiou")
+    let verboten = Set.ofList ([ "ab"; "cd"; "pq"; "xy" ])
+
+    let pairs (s: string) =
+        if s.Length < 2 then
+            Seq.empty
+        else
+            let mutable prev = s.[0]
+            seq {
+                for c in s.Substring(1) do
+                    yield (sprintf "%c%c" prev c)
+                    prev <- c
+            }
+
+    let vowels_nr (s: string) =
+        let mutable n = 0
+        for (c: char) in s do
+            if vowels.Contains(c) then n <- n + 1 else ()
+        n
+
+    let is_nice s =
+        let ps = pairs s
+        vowels_nr s >= 3 && ps |> Seq.exists (fun p -> p.[0] = p.[1])
+        && ps |> Seq.forall (fun p -> not <| verboten.Contains p)
+
+
+    let part1 =
+        multi_line_input 5
+        |> Seq.filter is_nice
+        |> Seq.length
+
+//    let part2 =
+//        raise <| NotImplementedException "todo"
 
 
 
@@ -144,4 +179,6 @@ let main argv =
     printfn "Day 3 part 2 answer: %i" Day3.part2
     printfn "Day 4 part 1 answer: %i" <| Day4.part1 "ckczppom"
     printfn "Day 4 part 2 answer: %i" <| Day4.part2 "ckczppom"
+    printfn "Day 5 part 1 answer: %i" Day5.part1
+    //    printfn "Day 5 part 2 answer: %i" Day5.part2
     0
