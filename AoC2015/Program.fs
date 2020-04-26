@@ -1,5 +1,4 @@
-﻿open System
-open System.IO
+﻿open System.IO
 open System.Security.Cryptography
 open System.Text
 
@@ -18,7 +17,7 @@ let single_line_input day =
     Seq.head (multi_line_input day)
 
 module Day1 =
-    let part1 =
+    let part1 () =
         let floor s =
             let mutable n = 0
 
@@ -30,7 +29,7 @@ module Day1 =
             n
         floor (single_line_input 1)
 
-    let part2 =
+    let part2 () =
         let time_to_basement (s: string): int =
             let mutable i = 0
             let mutable n = 0
@@ -51,7 +50,7 @@ module Day2 =
 
     let task = multi_line_input 2 |> Seq.map dimensions
 
-    let part1 =
+    let part1 () =
         let area (w, l, h) =
             let sides =
                 [ l * w
@@ -63,7 +62,7 @@ module Day2 =
 
         Seq.map area task |> Seq.sum
 
-    let part2 =
+    let part2 () =
         let ribbon (w, l, h) =
             let sides =
                 [ l + w
@@ -87,7 +86,7 @@ module Day3 =
         | '^' -> { santa with y = santa.y - 1 }
         | 'v' -> { santa with y = santa.y + 1 }
 
-    let part1 =
+    let part1 () =
         let task = single_line_input 3
         let mutable visited = Set.empty
 
@@ -99,7 +98,7 @@ module Day3 =
             santa <- move santa c
         Set.count visited
 
-    let part2 =
+    let part2 () =
         let task = single_line_input 3
 
         let start =
@@ -188,12 +187,12 @@ module Day5 =
         let ps = pairs s
         has_spaced_pair ps && has_adjacent_pair s
 
-    let part1 =
+    let part1 () =
         multi_line_input 5
         |> Seq.filter is_nice
         |> Seq.length
 
-    let part2 =
+    let part2 () =
         multi_line_input 5
         |> Seq.filter is_nice2
         |> Seq.length
@@ -202,14 +201,14 @@ module Day5 =
 
 [<EntryPoint>]
 let main argv =
-    printfn "Day 1 part 1 answer: %i" Day1.part1
-    printfn "Day 1 part 2 answer: %i" Day1.part2
-    printfn "Day 2 part 1 answer: %i" Day2.part1
-    printfn "Day 2 part 2 answer: %i" Day2.part2
-    printfn "Day 3 part 1 answer: %i" Day3.part1
-    printfn "Day 3 part 2 answer: %i" Day3.part2
+    printfn "Day 1 part 1 answer: %i" <| Day1.part1 ()
+    printfn "Day 1 part 2 answer: %i" <| Day1.part2 ()
+    printfn "Day 2 part 1 answer: %i" <| Day2.part1 ()
+    printfn "Day 2 part 2 answer: %i" <| Day2.part2 ()
+    printfn "Day 3 part 1 answer: %i" <| Day3.part1 ()
+    printfn "Day 3 part 2 answer: %i" <| Day3.part2 ()
     printfn "Day 4 part 1 answer: %i" <| Day4.part1 "ckczppom"
     printfn "Day 4 part 2 answer: %i" <| Day4.part2 "ckczppom"
-    printfn "Day 5 part 1 answer: %i" Day5.part1
-    printfn "Day 5 part 2 answer: %i" Day5.part2
+    printfn "Day 5 part 1 answer: %i" <| Day5.part1 ()
+    printfn "Day 5 part 2 answer: %i" <| Day5.part2 ()
     0
